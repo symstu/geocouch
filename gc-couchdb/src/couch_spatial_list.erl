@@ -62,8 +62,6 @@ handle_view_list_req_deprecated(#httpd{method=Method}=Req, Db, DDoc)
         Req#httpd{path_parts=
             [A, B, C, D, <<"foo">>, ListName, DesignName, SpatialName]}
     end,
-    ?LOG_INFO("WARNING: Request to deprecated _spatiallist handler, " ++
-              "please use _spatial/_list instead!", []),
     handle_view_list_req(Req2, Db, DDoc);
 handle_view_list_req_deprecated(#httpd{method='GET'}=Req, _Db, _DDoc) ->
     couch_httpd:send_error(Req, 404, <<"list_error">>, <<"Invalid path.">>);

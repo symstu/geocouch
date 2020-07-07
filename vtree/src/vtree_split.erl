@@ -283,9 +283,6 @@ create_split_candidates([H|T], FillMin, FillMax) ->
 % maximum threshold is overcome. This means the the maximum threshold
 % guarantee will be violated, but that's better than a fatal error.
 create_split_candidates(A, [], 0, FillMax, []) ->
-    ?LOG_ERROR("Warning: there is a node that is bigger than the maximum "
-               "chunk threshold (~p). Increase the chunk threshold.",
-               [FillMax]),
     case vtree_modify:get_overflowing_subset(FillMax, A) of
         % The very last node lead to the overflow, hence the second partition
         % is empty, but split candidates must be divided into two partitions
@@ -301,8 +298,6 @@ create_split_candidates(A, [], 0, FillMax, []) ->
 % very large byte size, the other one very small. There the minimum fill rate
 % can't be satisfied easily and we would end up without a candidate at all.
 create_split_candidates(A, [], _, FillMax, []) ->
-    ?LOG_INFO("Relax the minimum fill rate condition in order to find a "
-              "split candidate", []),
     create_split_candidates(A, 0, FillMax);
 create_split_candidates(_, [], _, _, Candidates) ->
     lists:reverse(Candidates);

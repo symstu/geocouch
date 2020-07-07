@@ -30,7 +30,6 @@ cleanup(Vt, []) ->
 cleanup(#vtree{root=nil}=Vt, _Nodes) ->
     Vt;
 cleanup(Vt, Nodes) ->
-    T1 = erlang:monotonic_time(),
     Root = Vt#vtree.root,
     PartitionedNodes = [Nodes],
     KpNodes = cleanup_multiple(Vt, PartitionedNodes, [Root]),
@@ -39,8 +38,6 @@ cleanup(Vt, Nodes) ->
                   KpNodes ->
                       vtree_modify:write_new_root(Vt, KpNodes)
               end,
-    ?LOG_DEBUG("Cleanup took: ~ps~n",
-               [erlang:convert_time_unit(erlang:monotonic_time() - T1, native, microsecond)/1000000]),
     Vt#vtree{root=NewRoot}.
 
 -spec cleanup_multiple(Vt :: #vtree{}, ToCleanup :: [#kv_node{}],
